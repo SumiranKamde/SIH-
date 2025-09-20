@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CODEHEX - Smart Temple Crowd Management</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIkNPREVIRVgiLAogICJzaG9ydF9uYW1lIjogIkNPREVIRVgiLAogICJzdGFydF91cmwiOiAiLyIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiI0ZGOEMwMCIsCiAgInRoZW1lX2NvbG9yIjogIiNEQzE0M0MiCn0=">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Emergency SOS Button -->
+        <button class="sos-button" id="sosButton">
+            <span class="sos-icon">🚨</span>
+            <span class="sos-text">SOS</span>
+        </button>
+
+        <!-- Header -->
+        <header class="app-header">
+            <div class="container">
+                <div class="header-content">
+                    <div class="brand-section">
+                        <div class="app-logo">
+                            <span class="logo-icon">🕉️</span>
+                            <div class="logo-text">
+                                <h1>CODEHEX</h1>
+                                <span class="logo-subtitle">Smart Temple Crowd Management System</span>
+                            </div>
+                        </div>
+                        <div class="sih-badge">
+                            <span class="sih-year">SIH 2025</span>
+                            <span class="sih-id">PS ID: 25165</span>
+                        </div>
+                    </div>
+                    <div class="header-controls">
+                        <div class="greeting-text">
+                            <span id="greetingText">🙏 Jay Somnath</span>
+                        </div>
+                        <div class="user-toggle">
+                            <button class="toggle-btn" id="userToggle" data-mode="pilgrim">
+                                <span class="toggle-indicator"></span>
+                                <span class="toggle-label">Pilgrim</span>
+                            </button>
+                        </div>
+                        <div class="live-status">
+                            <span class="status-dot"></span>
+                            <span>Live</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="main-nav">
+            <div class="container">
+                <div class="nav-tabs">
+                    <button class="nav-tab active" data-tab="dashboard">
+                        <span class="tab-icon">🏠</span>
+                        <span>Dashboard</span>
+                    </button>
+                    <button class="nav-tab" data-tab="temples">
+                        <span class="tab-icon">🏛️</span>
+                        <span>Temples</span>
+                    </button>
+                    <button class="nav-tab" data-tab="bookings">
+                        <span class="tab-icon">🎫</span>
+                        <span>My Bookings</span>
+                    </button>
+                    <button class="nav-tab" data-tab="analytics">
+                        <span class="tab-icon">📊</span>
+                        <span>Analytics</span>
+                    </button>
+                    <button class="nav-tab" data-tab="emergency">
+                        <span class="tab-icon">🚨</span>
+                        <span>Emergency</span>
+                    </button>
+                    <button class="nav-tab admin-only hidden" data-tab="admin">
+                        <span class="tab-icon">⚙️</span>
+                        <span>Admin</span>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="container">
+                
+                <!-- Dashboard Tab -->
+                <div class="tab-content active" id="dashboard">
+                    <div class="dashboard-welcome">
+                        <h2>Welcome to Gujarat's Sacred Temples</h2>
+                        <p>Real-time crowd management for Somnath, Dwarka, Ambaji & Pavagadh temples</p>
+                    </div>
+
+                    <div class="dashboard-grid">
+                        <div class="live-temple-cards" id="liveTempleCards">
+                            <!-- Temple cards will be populated by JavaScript -->
+                        </div>
+
+                        <div class="quick-stats">
+                            <h3>Live Statistics</h3>
+                            <div class="stats-grid">
+                                <div class="stat-card total-pilgrims">
+                                    <div class="stat-icon">👥</div>
+                                    <div class="stat-info">
+                                        <div class="stat-number" id="totalPilgrims">13,100</div>
+                                        <div class="stat-label">Total Pilgrims Online</div>
+                                    </div>
+                                </div>
+                                <div class="stat-card avg-wait">
+                                    <div class="stat-icon">⏱️</div>
+                                    <div class="stat-info">
+                                        <div class="stat-number" id="avgWait">31 min</div>
+                                        <div class="stat-label">Average Wait Time</div>
+                                    </div>
+                                </div>
+                                <div class="stat-card parking-available">
+                                    <div class="stat-icon">🅿️</div>
+                                    <div class="stat-info">
+                                        <div class="stat-number" id="parkingAvailable">524</div>
+                                        <div class="stat-label">Parking Available</div>
+                                    </div>
+                                </div>
+                                <div class="stat-card weather-info">
+                                    <div class="stat-icon">🌤️</div>
+                                    <div class="stat-info">
+                                        <div class="stat-number" id="weatherTemp">28°C</div>
+                                        <div class="stat-label">Partly Cloudy</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="quick-actions">
+                            <h3>Quick Actions</h3>
+                            <div class="action-buttons">
+                                <button class="action-btn book-darshan-btn" id="quickBookBtn">
+                                    <span class="btn-icon">🎫</span>
+                                    <span>Book Darshan Slot</span>
+                                </button>
+                                <button class="action-btn qr-scan-btn" id="qrScanBtn">
+                                    <span class="btn-icon">📱</span>
+                                    <span>Scan QR Code</span>
+                                </button>
+                                <button class="action-btn navigation-btn">
+                                    <span class="btn-icon">🧭</span>
+                                    <span>Temple Navigation</span>
+                                </button>
+                                <button class="action-btn aarti-btn">
+                                    <span class="btn-icon">🪔</span>
+                                    <span>Aarti Timings</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Festival Calendar -->
+                    <div class="festival-section">
+                        <h3>Upcoming Festivals & Special Events</h3>
+                        <div class="festival-cards" id="festivalCards">
+                            <!-- Festival cards will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Temples Tab -->
+                <div class="tab-content" id="temples">
+                    <div class="temples-header">
+                        <h2>Gujarat's Sacred Temples</h2>
+                        <div class="temple-filters">
+                            <select class="form-control temple-filter" id="templeFilter">
+                                <option value="all">All Temples</option>
+                                <option value="safe">Safe Crowd Level</option>
+                                <option value="moderate">Moderate Crowd</option>
+                                <option value="crowded">High Crowd</option>
+                            </select>
+                            <button class="btn btn--primary" id="refreshTemples">
+                                <span>🔄 Refresh</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="temples-grid" id="templesGrid">
+                        <!-- Temple cards will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Bookings Tab -->
+                <div class="tab-content" id="bookings">
+                    <div class="bookings-header">
+                        <h2>My Darshan Bookings</h2>
+                        <button class="btn btn--primary" id="newBookingBtn">
+                            <span>+ New Booking</span>
+                        </button>
+                    </div>
+                    <div class="bookings-content">
+                        <div class="current-booking" id="currentBooking">
+                            <!-- Current booking will be populated by JavaScript -->
+                        </div>
+                        <div class="bookings-list" id="bookingsList">
+                            <!-- Past bookings will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analytics Tab -->
+                <div class="tab-content" id="analytics">
+                    <h2>AI-Powered Crowd Analytics</h2>
+                    
+                    <div class="analytics-grid">
+                        <div class="chart-container">
+                            <div class="chart-header">
+                                <h3>Real-time vs Predicted Crowd</h3>
+                                <div class="chart-legend">
+                                    <span class="legend-item">
+                                        <span class="legend-color actual"></span>Actual
+                                    </span>
+                                    <span class="legend-item">
+                                        <span class="legend-color predicted"></span>AI Predicted
+                                    </span>
+                                    <span class="legend-item confidence">
+                                        <span class="legend-color confidence"></span>91% Accuracy
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="chart-wrapper" style="position: relative; height: 350px;">
+                                <canvas id="crowdChart"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="predictions-panel">
+                            <h3>AI Predictions</h3>
+                            <div class="prediction-cards">
+                                <div class="prediction-card peak-time">
+                                    <div class="prediction-icon">⏰</div>
+                                    <div class="prediction-title">Peak Time Today</div>
+                                    <div class="prediction-value">11:30 AM - 12:30 PM</div>
+                                    <div class="prediction-confidence">Expected: 4,100 pilgrims</div>
+                                </div>
+                                <div class="prediction-card best-time">
+                                    <div class="prediction-icon">✨</div>
+                                    <div class="prediction-title">Best Visit Time</div>
+                                    <div class="prediction-value">2:00 PM - 4:00 PM</div>
+                                    <div class="prediction-confidence">Crowd Level: Low</div>
+                                </div>
+                                <div class="prediction-card festival-alert">
+                                    <div class="prediction-icon">🎊</div>
+                                    <div class="prediction-title">Festival Impact</div>
+                                    <div class="prediction-value">Dussehra Surge</div>
+                                    <div class="prediction-confidence">300% increase expected</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="heatmap-section">
+                        <h3>Temple Area Crowd Density</h3>
+                        <div class="temple-selector">
+                            <select class="form-control" id="heatmapTempleSelect">
+                                <option value="1">Somnath Temple</option>
+                                <option value="2">Dwarkadhish Temple</option>
+                                <option value="3">Ambaji Temple</option>
+                                <option value="4">Pavagadh Temple</option>
+                            </select>
+                        </div>
+                        <div class="heatmap-container" id="heatmapContainer">
+                            <!-- Heatmap will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Emergency Tab -->
+                <div class="tab-content" id="emergency">
+                    <div class="emergency-header">
+                        <h2>Emergency Response Center</h2>
+                        <div class="emergency-status">
+                            <span class="status-indicator normal" id="emergencyStatus">All Systems Normal</span>
+                        </div>
+                    </div>
+                    
+                    <div class="emergency-quick-actions">
+                        <div class="emergency-contact-card">
+                            <h3>Emergency Contacts</h3>
+                            <div class="contact-numbers">
+                                <div class="contact-item">
+                                    <span class="contact-icon">🚑</span>
+                                    <span class="contact-label">Medical Emergency</span>
+                                    <span class="contact-number">108</span>
+                                </div>
+                                <div class="contact-item">
+                                    <span class="contact-icon">🚔</span>
+                                    <span class="contact-label">Police</span>
+                                    <span class="contact-number">100</span>
+                                </div>
+                                <div class="contact-item">
+                                    <span class="contact-icon">🚒</span>
+                                    <span class="contact-label">Fire Brigade</span>
+                                    <span class="contact-number">101</span>
+                                </div>
+                                <div class="contact-item">
+                                    <span class="contact-icon">🏛️</span>
+                                    <span class="contact-label">Temple Security</span>
+                                    <span class="contact-number">+91-9876543210</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="emergency-actions">
+                        <h3>Report Emergency</h3>
+                        <div class="emergency-buttons">
+                            <button class="emergency-btn medical">
+                                <span class="btn-icon">🏥</span>
+                                <span>Medical Emergency</span>
+                            </button>
+                            <button class="emergency-btn security">
+                                <span class="btn-icon">👮</span>
+                                <span>Security Alert</span>
+                            </button>
+                            <button class="emergency-btn crowd">
+                                <span class="btn-icon">👥</span>
+                                <span>Crowd Surge</span>
+                            </button>
+                            <button class="emergency-btn fire">
+                                <span class="btn-icon">🔥</span>
+                                <span>Fire/Evacuation</span>
+                            </button>
+                            <button class="emergency-btn lost">
+                                <span class="btn-icon">🔍</span>
+                                <span>Lost Person</span>
+                            </button>
+                            <button class="emergency-btn panic">
+                                <span class="btn-icon">⚠️</span>
+                                <span>Panic Alert</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="emergency-alerts">
+                        <h3>Recent Emergency Alerts</h3>
+                        <div class="alerts-list" id="alertsList">
+                            <!-- Alerts will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Admin Tab -->
+                <div class="tab-content admin-only" id="admin">
+                    <div class="admin-header">
+                        <h2>Admin Control Center</h2>
+                        <div class="admin-controls">
+                            <button class="btn btn--primary" id="broadcastBtn">📢 Broadcast Alert</button>
+                            <button class="btn btn--secondary" id="staffDeployBtn">👥 Deploy Staff</button>
+                            <button class="btn btn--outline" id="generateReportBtn">📄 Generate Report</button>
+                        </div>
+                    </div>
+                    
+                    <div class="admin-grid">
+                        <div class="live-monitoring">
+                            <h3>Live System Monitoring</h3>
+                            <div class="monitoring-cards">
+                                <div class="monitor-card">
+                                    <div class="monitor-icon">👥</div>
+                                    <div class="monitor-content">
+                                        <div class="monitor-title">Active Staff</div>
+                                        <div class="monitor-value">47</div>
+                                        <div class="monitor-status online">All Online</div>
+                                    </div>
+                                </div>
+                                <div class="monitor-card">
+                                    <div class="monitor-icon">📹</div>
+                                    <div class="monitor-content">
+                                        <div class="monitor-title">CCTV Cameras</div>
+                                        <div class="monitor-value">64/68</div>
+                                        <div class="monitor-status operational">Operational</div>
+                                    </div>
+                                </div>
+                                <div class="monitor-card">
+                                    <div class="monitor-icon">🛡️</div>
+                                    <div class="monitor-content">
+                                        <div class="monitor-title">Security Level</div>
+                                        <div class="monitor-value">Normal</div>
+                                        <div class="monitor-status safe">Secure</div>
+                                    </div>
+                                </div>
+                                <div class="monitor-card">
+                                    <div class="monitor-icon">📊</div>
+                                    <div class="monitor-content">
+                                        <div class="monitor-title">System Load</div>
+                                        <div class="monitor-value">78%</div>
+                                        <div class="monitor-status good">Optimal</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="resource-deployment">
+                            <h3>Resource Deployment</h3>
+                            <div class="deployment-grid">
+                                <div class="area-deployment">
+                                    <div class="area-info">
+                                        <div class="area-name">Somnath - Main Darshan</div>
+                                        <div class="area-stats">12 staff • 85% capacity</div>
+                                    </div>
+                                    <button class="deploy-btn">+ Deploy</button>
+                                </div>
+                                <div class="area-deployment">
+                                    <div class="area-info">
+                                        <div class="area-name">Dwarka - Queue Area</div>
+                                        <div class="area-stats">8 staff • 92% capacity</div>
+                                    </div>
+                                    <button class="deploy-btn urgent">+ Deploy</button>
+                                </div>
+                                <div class="area-deployment">
+                                    <div class="area-info">
+                                        <div class="area-name">Ambaji - Hill Path</div>
+                                        <div class="area-stats">6 staff • 75% capacity</div>
+                                    </div>
+                                    <button class="deploy-btn">+ Deploy</button>
+                                </div>
+                                <div class="area-deployment">
+                                    <div class="area-info">
+                                        <div class="area-name">Pavagadh - Ropeway</div>
+                                        <div class="area-stats">4 staff • 82% capacity</div>
+                                    </div>
+                                    <button class="deploy-btn">+ Deploy</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="alert-management">
+                            <h3>Alert Management</h3>
+                            <div class="alert-controls">
+                                <select class="form-control" id="alertType">
+                                    <option>Select Alert Type</option>
+                                    <option>Crowd Warning</option>
+                                    <option>Weather Update</option>
+                                    <option>Aarti Timing Change</option>
+                                    <option>Parking Full</option>
+                                    <option>Route Closure</option>
+                                    <option>Emergency Drill</option>
+                                </select>
+                                <select class="form-control" id="alertTarget">
+                                    <option>All Temples</option>
+                                    <option>Somnath Temple</option>
+                                    <option>Dwarkadhish Temple</option>
+                                    <option>Ambaji Temple</option>
+                                    <option>Pavagadh Temple</option>
+                                </select>
+                                <textarea class="form-control" id="alertMessage" placeholder="Enter alert message in Hindi, Gujarati or English..." rows="3"></textarea>
+                                <button class="btn btn--primary btn--full-width" id="sendAlertBtn">Send Alert to All Pilgrims</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+
+        <!-- QR Scanner Modal -->
+        <div class="modal hidden" id="qrModal">
+            <div class="modal-overlay" id="qrModalOverlay"></div>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>QR Code Scanner</h3>
+                    <button class="modal-close" id="qrModalClose">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="scanner-area">
+                        <div class="scanner-frame">
+                            <div class="scanner-corners"></div>
+                            <div class="scanner-message">Position your QR code within the frame</div>
+                        </div>
+                    </div>
+                    <div class="scanner-actions">
+                        <button class="btn btn--primary" id="simulateScan">Simulate Scan</button>
+                        <button class="btn btn--secondary" id="manualEntry">Manual Entry</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Booking Modal -->
+        <div class="modal hidden" id="bookingModal">
+            <div class="modal-overlay" id="bookingModalOverlay"></div>
+            <div class="modal-content booking-modal-content">
+                <div class="modal-header">
+                    <h3>Darshan Booking Confirmation</h3>
+                    <button class="modal-close" id="bookingModalClose">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="booking-success">
+                        <div class="success-icon">✅</div>
+                        <h4>🙏 Darshan Booked Successfully!</h4>
+                        <div class="booking-details" id="bookingDetails">
+                            <!-- Will be populated by JavaScript -->
+                        </div>
+                        <div class="qr-code-display">
+                            <div class="qr-code-frame">
+                                <div class="qr-placeholder" id="qrCodeDisplay">
+                                    <div class="qr-icon">📱</div>
+                                    <div class="qr-text">Your Digital Darshan Pass</div>
+                                </div>
+                            </div>
+                            <p class="qr-instruction">Show this QR code at temple entry</p>
+                        </div>
+                        <div class="booking-actions">
+                            <button class="btn btn--primary" id="downloadQR">Download QR</button>
+                            <button class="btn btn--secondary" id="shareBooking">Share Booking</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Temple Selection Modal -->
+        <div class="modal hidden" id="templeSelectModal">
+            <div class="modal-overlay" id="templeSelectModalOverlay"></div>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Select Temple for Darshan</h3>
+                    <button class="modal-close" id="templeSelectModalClose">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="temple-selection-grid" id="templeSelectionGrid">
+                        <!-- Temple selection cards will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alert Toast -->
+        <div class="toast hidden" id="alertToast">
+            <div class="toast-content">
+                <span class="toast-icon"></span>
+                <span class="toast-message"></span>
+            </div>
+            <button class="toast-close" id="toastClose">×</button>
+        </div>
+
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
